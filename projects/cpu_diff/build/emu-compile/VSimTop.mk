@@ -4,7 +4,7 @@
 # Execute this makefile from the object directory:
 #    make -f VSimTop.mk
 
-default: /home/fluctlight/project/oscpu/projects/cpu_diff/build/emu
+default: /home/fluctlight/project/A53_core/projects/cpu_diff/build/emu
 
 ### Constants...
 # Perl executable (from $PERL)
@@ -35,7 +35,7 @@ VM_PREFIX = VSimTop
 VM_MODPREFIX = VSimTop
 # User CFLAGS (from -CFLAGS on Verilator command line)
 VM_USER_CFLAGS = \
-	-std=c++11 -static -Wall -I/home/fluctlight/project/oscpu/libraries/difftest/src/test/csrc -I/home/fluctlight/project/oscpu/libraries/difftest/src/test/csrc/common -I/home/fluctlight/project/oscpu/libraries/difftest/src/test/csrc/difftest -DVERILATOR -DNUM_CORES=1 -I/usr/include/SDL2 -D_REENTRANT -fPIE \
+	-std=c++11 -static -Wall -I/home/fluctlight/project/A53_core/libraries/difftest/src/test/csrc -I/home/fluctlight/project/A53_core/libraries/difftest/src/test/csrc/common -I/home/fluctlight/project/A53_core/libraries/difftest/src/test/csrc/difftest -DVERILATOR -DNUM_CORES=1 -I/usr/include/SDL2 -D_REENTRANT -fPIE \
 
 # User LDLIBS (from -LDFLAGS on Verilator command line)
 VM_USER_LDLIBS = \
@@ -69,10 +69,10 @@ VM_USER_CLASSES = \
 
 # User .cpp directories (from .cpp's on Verilator command line)
 VM_USER_DIR = \
-	/home/fluctlight/project/oscpu/libraries/difftest/src/test/csrc/common \
-	/home/fluctlight/project/oscpu/libraries/difftest/src/test/csrc/difftest \
-	/home/fluctlight/project/oscpu/libraries/difftest/src/test/csrc/vcs \
-	/home/fluctlight/project/oscpu/libraries/difftest/src/test/csrc/verilator \
+	/home/fluctlight/project/A53_core/libraries/difftest/src/test/csrc/common \
+	/home/fluctlight/project/A53_core/libraries/difftest/src/test/csrc/difftest \
+	/home/fluctlight/project/A53_core/libraries/difftest/src/test/csrc/vcs \
+	/home/fluctlight/project/A53_core/libraries/difftest/src/test/csrc/verilator \
 
 
 ### Default rules...
@@ -84,55 +84,55 @@ include $(VERILATOR_ROOT)/include/verilated.mk
 ### Executable rules... (from --exe)
 VPATH += $(VM_USER_DIR)
 
-SimJTAG.o: /home/fluctlight/project/oscpu/libraries/difftest/src/test/csrc/common/SimJTAG.cpp
+SimJTAG.o: /home/fluctlight/project/A53_core/libraries/difftest/src/test/csrc/common/SimJTAG.cpp
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
-axi4.o: /home/fluctlight/project/oscpu/libraries/difftest/src/test/csrc/common/axi4.cpp
+axi4.o: /home/fluctlight/project/A53_core/libraries/difftest/src/test/csrc/common/axi4.cpp
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
-common.o: /home/fluctlight/project/oscpu/libraries/difftest/src/test/csrc/common/common.cpp
+common.o: /home/fluctlight/project/A53_core/libraries/difftest/src/test/csrc/common/common.cpp
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
-compress.o: /home/fluctlight/project/oscpu/libraries/difftest/src/test/csrc/common/compress.cpp
+compress.o: /home/fluctlight/project/A53_core/libraries/difftest/src/test/csrc/common/compress.cpp
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
-device.o: /home/fluctlight/project/oscpu/libraries/difftest/src/test/csrc/common/device.cpp
+device.o: /home/fluctlight/project/A53_core/libraries/difftest/src/test/csrc/common/device.cpp
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
-flash.o: /home/fluctlight/project/oscpu/libraries/difftest/src/test/csrc/common/flash.cpp
+flash.o: /home/fluctlight/project/A53_core/libraries/difftest/src/test/csrc/common/flash.cpp
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
-keyboard.o: /home/fluctlight/project/oscpu/libraries/difftest/src/test/csrc/common/keyboard.cpp
+keyboard.o: /home/fluctlight/project/A53_core/libraries/difftest/src/test/csrc/common/keyboard.cpp
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
-ram.o: /home/fluctlight/project/oscpu/libraries/difftest/src/test/csrc/common/ram.cpp
+ram.o: /home/fluctlight/project/A53_core/libraries/difftest/src/test/csrc/common/ram.cpp
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
-remote_bitbang.o: /home/fluctlight/project/oscpu/libraries/difftest/src/test/csrc/common/remote_bitbang.cpp
+remote_bitbang.o: /home/fluctlight/project/A53_core/libraries/difftest/src/test/csrc/common/remote_bitbang.cpp
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
-sdcard.o: /home/fluctlight/project/oscpu/libraries/difftest/src/test/csrc/common/sdcard.cpp
+sdcard.o: /home/fluctlight/project/A53_core/libraries/difftest/src/test/csrc/common/sdcard.cpp
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
-uart.o: /home/fluctlight/project/oscpu/libraries/difftest/src/test/csrc/common/uart.cpp
+uart.o: /home/fluctlight/project/A53_core/libraries/difftest/src/test/csrc/common/uart.cpp
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
-vga.o: /home/fluctlight/project/oscpu/libraries/difftest/src/test/csrc/common/vga.cpp
+vga.o: /home/fluctlight/project/A53_core/libraries/difftest/src/test/csrc/common/vga.cpp
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
-difftest.o: /home/fluctlight/project/oscpu/libraries/difftest/src/test/csrc/difftest/difftest.cpp
+difftest.o: /home/fluctlight/project/A53_core/libraries/difftest/src/test/csrc/difftest/difftest.cpp
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
-goldenmem.o: /home/fluctlight/project/oscpu/libraries/difftest/src/test/csrc/difftest/goldenmem.cpp
+goldenmem.o: /home/fluctlight/project/A53_core/libraries/difftest/src/test/csrc/difftest/goldenmem.cpp
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
-interface.o: /home/fluctlight/project/oscpu/libraries/difftest/src/test/csrc/difftest/interface.cpp
+interface.o: /home/fluctlight/project/A53_core/libraries/difftest/src/test/csrc/difftest/interface.cpp
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
-nemuproxy.o: /home/fluctlight/project/oscpu/libraries/difftest/src/test/csrc/difftest/nemuproxy.cpp
+nemuproxy.o: /home/fluctlight/project/A53_core/libraries/difftest/src/test/csrc/difftest/nemuproxy.cpp
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
-ref.o: /home/fluctlight/project/oscpu/libraries/difftest/src/test/csrc/difftest/ref.cpp
+ref.o: /home/fluctlight/project/A53_core/libraries/difftest/src/test/csrc/difftest/ref.cpp
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
-spikedasm.o: /home/fluctlight/project/oscpu/libraries/difftest/src/test/csrc/difftest/spikedasm.cpp
+spikedasm.o: /home/fluctlight/project/A53_core/libraries/difftest/src/test/csrc/difftest/spikedasm.cpp
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
-main.o: /home/fluctlight/project/oscpu/libraries/difftest/src/test/csrc/vcs/main.cpp
+main.o: /home/fluctlight/project/A53_core/libraries/difftest/src/test/csrc/vcs/main.cpp
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
-emu.o: /home/fluctlight/project/oscpu/libraries/difftest/src/test/csrc/verilator/emu.cpp
+emu.o: /home/fluctlight/project/A53_core/libraries/difftest/src/test/csrc/verilator/emu.cpp
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
-logger.o: /home/fluctlight/project/oscpu/libraries/difftest/src/test/csrc/verilator/logger.cpp
+logger.o: /home/fluctlight/project/A53_core/libraries/difftest/src/test/csrc/verilator/logger.cpp
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
-main.o: /home/fluctlight/project/oscpu/libraries/difftest/src/test/csrc/verilator/main.cpp
+main.o: /home/fluctlight/project/A53_core/libraries/difftest/src/test/csrc/verilator/main.cpp
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
-snapshot.o: /home/fluctlight/project/oscpu/libraries/difftest/src/test/csrc/verilator/snapshot.cpp
+snapshot.o: /home/fluctlight/project/A53_core/libraries/difftest/src/test/csrc/verilator/snapshot.cpp
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
 
 ### Link rules... (from --exe)
-/home/fluctlight/project/oscpu/projects/cpu_diff/build/emu: $(VK_USER_OBJS) $(VK_GLOBAL_OBJS) $(VM_PREFIX)__ALL.a $(VM_HIER_LIBS)
+/home/fluctlight/project/A53_core/projects/cpu_diff/build/emu: $(VK_USER_OBJS) $(VK_GLOBAL_OBJS) $(VM_PREFIX)__ALL.a $(VM_HIER_LIBS)
 	$(LINK) $(LDFLAGS) $^ $(LOADLIBES) $(LDLIBS) $(LIBS) $(SC_LIBS) -o $@
 
 

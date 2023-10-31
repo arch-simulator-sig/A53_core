@@ -1,0 +1,1 @@
+../vsrc/decoder_2_4.v

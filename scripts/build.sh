@@ -25,28 +25,6 @@ help() {
     exit 0
 }
 
-create_soft_link() {
-    mkdir ${1} 1>/dev/null 2>&1
-    find -L ${1} -type l -delete
-    FILES=`eval "find ${2} -mindepth 1 -maxdepth 1 -name ${3}"`
-    for FILE in ${FILES[@]}
-    do
-        eval "ln -s \"`realpath --relative-to="${1}" "$FILE"`\" \"${1}/${FILE##*/}\" 1>/dev/null 2>&1"
-    done
-}
-
-create_bin_soft_link() {
-    find -L $BUILD_PATH -maxdepth 1 -type l -delete
-    FOLDERS=`find bin -mindepth 1 -maxdepth 1 -type d`
-    for FOLDER in ${FOLDERS[@]}
-    do
-        SUBFOLDER=${FOLDER##*/}
-        eval "ln -s \"`realpath --relative-to="$BUILD_PATH" "$OSCPU_PATH/$FOLDER"`\" \"$BUILD_PATH/${FOLDER##*/}\" 1>/dev/null 2>&1"
-    done
-
-    # create soft link ($BUILD_PATH/*.bin -> $OSCPU_PATH/$BIN_FOLDER/*.bin). Why? Because of laziness!
-    create_soft_link $BUILD_PATH $OSCPU_PATH/$BIN_FOLDER \"*.bin\"
-}
 
 compile_dramsim3() {
     if [[ ! -f $OSCPU_PATH/$DRAMSIM3_FOLDER/build/libdramsim3.a ]]; then
@@ -114,40 +92,9 @@ build_diff_proj() {
     # create soft link ($BUILD_PATH/*.v -> $PROJECT_PATH/$VSRC_FOLDER/*.v)
     create_soft_link $BUILD_PATH $PROJECT_PATH/$VSRC_FOLDER \"*.v\"
     # create soft link ($BUILD_PATH/*.v -> $PROJECT_PATH/ysyx/ram/*.v)
-    create_soft_link $BUILD_PATH $YSYXSOC_HOME/ysyx/ram \"*.v\"
+    # create_soft_link $BUILD_PATH $YSYXSOC_HOME/ysyx/ram \"*.v\"
 
     compile_difftest
-}
-
-build_soc_proj() {
-    mkdir -p $BUILD_PATH/vsrc $BUILD_PATH/csrc
-
-    if [[ ! -f "$PROJECT_PATH/$VSRC_FOLDER/ysyx_${ID:0-6}.v" ]]; then
-        echo "$VSRC_FOLDER/ysyx_${ID:0-6}.v not detected. Please follow the README of ysyxSoC to get this file."
-        exit 1
-    fi
-
-    [[ -f $BUILD_PATH/vsrc/cpu-check.py ]] || cp $YSYXSOC_HOME/ysyx/soc/cpu-check.py $BUILD_PATH/
-    sed -i -e "s/input(.*)/\"${ID:0-4}\"/g" $BUILD_PATH/cpu-check.py
-    eval "cd $PROJECT_PATH/$VSRC_FOLDER && python3 $BUILD_PATH/cpu-check.py 1> /dev/null && mv -f cpu-check.log $BUILD_PATH"
-    grep 'fine' $BUILD_PATH/cpu-check.log 1> /dev/null 2>&1
-    if [[ $? -ne 0 ]]; then
-        echo "Interface check failed. Check $BUILD_FOLDER/cpu-check.log for more details."
-        exit 1
-    fi
-
-    if [[ ! -f $BUILD_PATH/vsrc/ysyxSoCFull.v ]]; then
-        cp $YSYXSOC_HOME/ysyx/soc/ysyxSoCFull.v $BUILD_PATH/vsrc/
-        sed -i -e "s/ysyx_000000/ysyx_${ID:0-6}/g" $BUILD_PATH/vsrc/ysyxSoCFull.v
-    fi
-
-    ln -s $YSYXSOC_HOME/ysyx/peripheral $BUILD_PATH/vsrc/
-    ln -s $YSYXSOC_HOME/ysyx/ram $BUILD_PATH/vsrc/
-    ln -s $YSYXSOC_HOME/ysyx/peripheral/spiFlash $BUILD_PATH/csrc/
-    VSRC_FOLDER+=" $BUILD_PATH/vsrc"
-    CSRC_FOLDER+=" $BUILD_PATH/csrc"
-
-    ln -s $YSYXSOC_HOME/ysyx/program/bin $BUILD_PATH/ysyxSoC
 }
 
 build_proj() {
@@ -216,8 +163,6 @@ DIFFTEST_HELPER_PATH="src/test/vsrc/common"
 DIFFTEST_PARAM=
 DRAMSIM3_FOLDER="libraries/DRAMsim3"
 TEST_CASES=
-YSYXSOC="false"
-YSYXSOC_FOLDER="libraries/ysyxSoC"
 VERILATORFLAGS=
 
 # Check parameters
@@ -237,7 +182,6 @@ while getopts 'he:bt:sa:f:l:gwcdm:r:yv:' OPT; do
         d) DIFFTEST="true";;
         m) DIFFTEST_PARAM="$OPTARG";;
         r) TEST_CASES="$OPTARG"; DIFFTEST="true";;
-        y) YSYXSOC="true"; V_TOP_FILE="ysyxSoCFull.v";;
         v) VERILATORFLAGS="$OPTARG";;
         ?) help;;
     esac
@@ -257,15 +201,6 @@ export NEMU_HOME=$NEMU_HOME
 export NOOP_HOME=$PROJECT_PATH
 export DRAMSIM3_HOME=$DRAMSIM3_HOME
 
-# Get id and name
-ID=`sed '/^ID=/!d;s/.*=//' $MYINFO_FILE`
-NAME=`sed '/^Name=/!d;s/.*=//' $MYINFO_FILE`
-if [[ ${#ID} -le 7 ]] || [[ ${#NAME} -le 1 ]]; then
-    echo "Please fill your information in myinfo.txt!!!"
-    exit 1
-fi
-ID="${ID##*\r}"
-NAME="${NAME##*\r}"
 
 # Clean
 if [[ "$CLEAN" == "true" ]]; then
@@ -277,15 +212,7 @@ fi
 # Build project
 if [[ "$BUILD" == "true" ]]; then
     [[ -d $BUILD_PATH ]] && find $BUILD_PATH -type l -delete
-    [[ "$YSYXSOC" == "true" ]] && build_soc_proj
     [[ "$DIFFTEST" == "true" ]] && build_diff_proj || build_proj
-
-    #git commit
-    if [[ ! -f $OSCPU_PATH/.no_commit ]]; then
-        git add . -A --ignore-errors
-        (echo $NAME && echo $ID && hostnamectl && uptime) | git commit -F - -q --author='tracer-oscpu2021 <tracer@oscpu.org>' --no-verify --allow-empty 1>/dev/null 2>&1
-        sync
-    fi
 fi
 
 # Simulate

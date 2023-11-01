@@ -15,7 +15,7 @@
 #***************************************************************************************
 
 SIM_TOP    ?= SimTop
-DESIGN_DIR ?= ..
+DESIGN_DIR ?= ../../projects/cpu_diff/vsrc
 NUM_CORES  ?= 1
 
 BUILD_DIR = $(DESIGN_DIR)/build

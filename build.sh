@@ -76,23 +76,7 @@ compile_nemu() {
     fi
 }
 
-compile_chisel() {
-    if [[ -f $PROJECT_PATH/build.sc ]]; then
-        # create soft link ($PROJECT_PATH/difftest -> $LIBRARIES_HOME/difftest)
-        if [[ ! -L $PROJECT_PATH/$DIFFTEST_FOLDER ]]; then
-            eval "ln -s \"`realpath --relative-to="$PROJECT_PATH" "$LIBRARIES_HOME"`/$DIFFTEST_FOLDER\" \"$PROJECT_PATH/$DIFFTEST_FOLDER\" 1>/dev/null 2>&1"
-        fi
 
-        cd $PROJECT_PATH
-        mkdir vsrc 1>/dev/null 2>&1
-        mill -i oscpu.runMain TopMain -td vsrc
-        if [ $? -ne 0 ]; then
-            echo "Failed to compile chisel!!!"
-            exit 1
-        fi
-        cd $OSCPU_PATH
-    fi
-}
 
 compile_difftest() {
     cd $DIFFTEST_HOME
@@ -105,50 +89,21 @@ compile_difftest() {
 }
 
 build_diff_proj() {
-    compile_dramsim3
+    # compile_dramsim3
     compile_nemu
-    compile_chisel
+    # compile_chisel
 
     # Refresh the modification time of the top file, otherwise some changes to the RTL source code will not take effect in next compilation.
     touch -m `find $PROJECT_PATH/$VSRC_FOLDER -name $DIFFTEST_TOP_FILE` 1>/dev/null 2>&1
     # create soft link ($BUILD_PATH/*.v -> $PROJECT_PATH/$VSRC_FOLDER/*.v)
     create_soft_link $BUILD_PATH $PROJECT_PATH/$VSRC_FOLDER \"*.v\"
     # create soft link ($BUILD_PATH/*.v -> $PROJECT_PATH/ysyx/ram/*.v)
-    create_soft_link $BUILD_PATH $YSYXSOC_HOME/ysyx/ram \"*.v\"
+    # create_soft_link $BUILD_PATH $YSYXSOC_HOME/ysyx/ram \"*.v\"
 
     compile_difftest
 }
 
-build_soc_proj() {
-    mkdir -p $BUILD_PATH/vsrc $BUILD_PATH/csrc
 
-    if [[ ! -f "$PROJECT_PATH/$VSRC_FOLDER/ysyx_${ID:0-6}.v" ]]; then
-        echo "$VSRC_FOLDER/ysyx_${ID:0-6}.v not detected. Please follow the README of ysyxSoC to get this file."
-        exit 1
-    fi
-
-    [[ -f $BUILD_PATH/vsrc/cpu-check.py ]] || cp $YSYXSOC_HOME/ysyx/soc/cpu-check.py $BUILD_PATH/
-    sed -i -e "s/input(.*)/\"${ID:0-4}\"/g" $BUILD_PATH/cpu-check.py
-    eval "cd $PROJECT_PATH/$VSRC_FOLDER && python3 $BUILD_PATH/cpu-check.py 1> /dev/null && mv -f cpu-check.log $BUILD_PATH"
-    grep 'fine' $BUILD_PATH/cpu-check.log 1> /dev/null 2>&1
-    if [[ $? -ne 0 ]]; then
-        echo "Interface check failed. Check $BUILD_FOLDER/cpu-check.log for more details."
-        exit 1
-    fi
-
-    if [[ ! -f $BUILD_PATH/vsrc/ysyxSoCFull.v ]]; then
-        cp $YSYXSOC_HOME/ysyx/soc/ysyxSoCFull.v $BUILD_PATH/vsrc/
-        sed -i -e "s/ysyx_000000/ysyx_${ID:0-6}/g" $BUILD_PATH/vsrc/ysyxSoCFull.v
-    fi
-
-    ln -s $YSYXSOC_HOME/ysyx/peripheral $BUILD_PATH/vsrc/
-    ln -s $YSYXSOC_HOME/ysyx/ram $BUILD_PATH/vsrc/
-    ln -s $YSYXSOC_HOME/ysyx/peripheral/spiFlash $BUILD_PATH/csrc/
-    VSRC_FOLDER+=" $BUILD_PATH/vsrc"
-    CSRC_FOLDER+=" $BUILD_PATH/csrc"
-
-    ln -s $YSYXSOC_HOME/ysyx/program/bin $BUILD_PATH/ysyxSoC
-}
 
 build_proj() {
     cd $PROJECT_PATH
@@ -277,7 +232,6 @@ fi
 # Build project
 if [[ "$BUILD" == "true" ]]; then
     [[ -d $BUILD_PATH ]] && find $BUILD_PATH -type l -delete
-    [[ "$YSYXSOC" == "true" ]] && build_soc_proj
     [[ "$DIFFTEST" == "true" ]] && build_diff_proj || build_proj
 
     # #git commit

@@ -8,6 +8,13 @@
 +	$(MAKE) -C $(DESIGN_DIR) sim-verilog
 ```
 需要删除cpu_diff目录下的build文件，否则编译路径会用上一个人的绝对路径
+所有出现file notfound，显示路径不存在的时候，就把所有build开头的文件删了试试
+目前的尝试来看，如果编译过一次不生成波形的emu，想重新通过脚本生成波形，需要删掉build重新编译。
+显示上一次生成波形的快捷指令为：
+```
+./build.sh -e cpu_diff -d -w
+```
+-e后为工程目录。本例中编译project/cpu_diff下的工程，故为cpu_diff
 如果编译显示找不到<sqlite3.h>，需要运行：
 ```
 sudo apt-get install sqlite3 libsqlite3-dev

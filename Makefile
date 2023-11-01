@@ -73,18 +73,17 @@ verilog:
 	mkdir -p log
 	mkdir -p ${OBJ_DIR}
 	verilator ${VERILATOR_INCLUDE} ${WAVEOPTION} --savable --threads ${THREAD} -O3 -Wno-fatal -DSIMU -DSIMULATION=1 -Wall --trace -cc ${VFLAGS} ${SIMU_TOP_NAME}.v ${DIFFTEST}.v ${VERILATOR_SRC} 2>&1 | tee log/compile.log
-	$(MAKE) -C ${OBJ_DIR} -f "V${SIMU_TOP_NAME}.mk" || exit "$$?"
 
 emu: verilog
-	cd $(SCRIPT_DIR) && $(DIFFTEST_PATH) && $(MAKE)  EMU_TRACE=1  emu -j8  
+	cd $(DIFFTEST_PATH) && $(MAKE)  EMU_TRACE=1  emu -j8  
 
-test:
+test: emu
 	cd $(SCRIPT_DIR) && bash test.sh -a
 
-coremark:
+coremark: emu
 	cd $(SCRIPT_DIR) && bash test.sh -x
 
-submit:
+submit: 
 	cd $(SCRIPT_DIR) && bash submit.sh
 
 

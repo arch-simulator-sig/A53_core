@@ -280,12 +280,12 @@ if [[ "$BUILD" == "true" ]]; then
     [[ "$YSYXSOC" == "true" ]] && build_soc_proj
     [[ "$DIFFTEST" == "true" ]] && build_diff_proj || build_proj
 
-    #git commit
-    if [[ ! -f $OSCPU_PATH/.no_commit ]]; then
-        git add . -A --ignore-errors
-        (echo $NAME && echo $ID && hostnamectl && uptime) | git commit -F - -q --author='tracer-oscpu2021 <tracer@oscpu.org>' --no-verify --allow-empty 1>/dev/null 2>&1
-        sync
-    fi
+    # #git commit
+    # if [[ ! -f $OSCPU_PATH/.no_commit ]]; then
+    #     git add . -A --ignore-errors
+    #     (echo $NAME && echo $ID && hostnamectl && uptime) | git commit -F - -q --author='tracer-oscpu2021 <tracer@oscpu.org>' --no-verify --allow-empty 1>/dev/null 2>&1
+    #     sync
+    # fi
 fi
 
 # Simulate

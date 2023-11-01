@@ -11,3 +11,6 @@ rm -rf projects/cpu_diff/build
 
 # coremark
 bash test.sh -x
+
+# bin/custom-output 下面的所有测试
+bash test.sh -a

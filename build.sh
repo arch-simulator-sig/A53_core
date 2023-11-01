@@ -311,7 +311,7 @@ if [[ "$CHECK_WAVE" == "true" ]]; then
     cd $BUILD_PATH
     WAVE_FILE=`ls -t | grep .vcd | head -n 1`
     if [ -n "$WAVE_FILE" ]; then
-        gtkwave $WAVE_FILE
+        gtkwave $WAVE_FILE -g cpu_diff.gtkw
         if [ $? -ne 0 ]; then
             echo "Failed to run gtkwave!!!"
             exit 1

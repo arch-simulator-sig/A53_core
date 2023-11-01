@@ -1,10 +1,12 @@
 # 20231101 A53适配修改
 
 注释了/oscpu/libraries/difftest/Makefile中
+'''
 -$(SIM_TOP_V): $(DIFF_SCALA_FILE) $(SCALA_FILE)
 -	$(MAKE) -C $(DESIGN_DIR) sim-verilog
 +$(SIM_TOP_V): $(DIFF_SCALA_FILE)
 +	$(MAKE) -C $(DESIGN_DIR) sim-verilog
+'''
 需要删除cpu_diff目录下的build文件，否则编译路径会用上一个人的绝对路径
 如果编译显示找不到<sqlite3.h>，需要运行：
 sudo apt-get install sqlite3 libsqlite3-dev

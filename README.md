@@ -1,3 +1,7 @@
+# How to run
+
+bash run.sh
+
 # 20231101 A53适配修改
 
 注释了/oscpu/libraries/difftest/Makefile中

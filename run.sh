@@ -7,7 +7,7 @@ rm -rf projects/cpu_diff/build
 
 # cpu-tests
 # bash test.sh -c
-# rm -rf build
+rm -rf build
 
 # coremark
 bash test.sh -x

@@ -143,7 +143,7 @@ reg [63:0] cycleCnt;
 reg [63:0] instrCnt;
 reg [`REG_BUS] regs_diff [0 : 31];
 
-wire inst_valid = (debug_wb_pc != `PC_START) | (debug_wb_inst != 0);
+wire inst_valid = (debug_wb_pc != `PC_START & debug_wb_pc != 0) | (debug_wb_inst != 0);
 
 always @(negedge clock) begin
   if (reset) begin

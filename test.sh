@@ -5,7 +5,7 @@ PWD=`pwd`
 cpu_tests_dir=$PWD/bin/non-output/cpu-tests/
 riscv_tests_dir=$PWD/bin/non-output/riscv-tests/
 regression_tests_dir=$PWD/bin/custom-output/
-
+coremark_dir=$PWD/bin/custom-output/benchmark/coremark/
 mkdir build
 
 function tests {
@@ -25,7 +25,7 @@ function tests {
   wait
 }
 
-while getopts 'crat:w:ls' OPT; do
+while getopts 'craxt:w:ls' OPT; do
   case $OPT in
     c)
       tests $cpu_tests_dir;;
@@ -33,6 +33,8 @@ while getopts 'crat:w:ls' OPT; do
       tests $riscv_tests_dir;;
     a)
       tests $regression_tests_dir;;
+    x)
+      tests $coremark_dir;;
     t)
       example="$OPTARG"
       ./build/emu -i ${cpu_tests_dir}${example}-cpu-tests.bin;;

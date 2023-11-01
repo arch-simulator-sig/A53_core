@@ -9,14 +9,24 @@ module sram(
     input wire [63:0] wdata,
     output reg [63:0] rdata
 );
+    wire [63:0] rdata_tmp;
     RAMHelper RAMHelper(
         .clk              (clk),
         .en               (en),
         .rIdx             ((addr - `PC_START) >> 3),
-        .rdata            (rdata),
+        .rdata            (rdata_tmp),
         .wIdx             ((addr - `PC_START) >> 3),
         .wdata            (wdata),
         .wmask            (we),
         .wen              (|we)
     );
+
+    always @(posedge clk) begin
+        if (!rst_n) begin
+            rdata <= 0;
+        end
+        else begin
+            rdata <= rdata_tmp;
+        end
+    end
 endmodule

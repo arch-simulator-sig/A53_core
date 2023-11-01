@@ -159,7 +159,7 @@ always @(negedge clock) begin
 
 		regs_diff <= regs;
 
-    trap <= inst[6:0] == 7'h6b;
+    trap <= debug_wb_inst[6:0] == 7'h6b;
     trap_code <= regs[10][7:0];
     cycleCnt <= cycleCnt + 1;
     instrCnt <= instrCnt + inst_valid;

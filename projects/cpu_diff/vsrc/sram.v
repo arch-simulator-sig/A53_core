@@ -17,7 +17,7 @@ module sram(
         .rdata            (rdata_tmp),
         .wIdx             ((addr - `PC_START) >> 3),
         .wdata            (wdata),
-        .wmask            (we),
+        .wmask            ({{8{we[7]}},{8{we[6]}},{8{we[5]}},{8{we[4]}},{8{we[3]}},{8{we[2]}},{8{we[1]}},{8{we[0]}}}),
         .wen              (|we)
     );
 

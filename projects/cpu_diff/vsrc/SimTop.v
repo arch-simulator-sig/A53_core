@@ -50,7 +50,7 @@ wire [4 : 0]inst_type_o;
 wire [`REG_BUS]rd_data;
 
 wire clk;
-wire clk = clock;
+assign clk = clock;
 wire rst_n;
 assign rst_n = ~reset;
 
@@ -150,7 +150,7 @@ always @(negedge clock) begin
     {cmt_wen, cmt_wdest, cmt_wdata, cmt_pc, cmt_inst, cmt_valid, trap, trap_code, cycleCnt, instrCnt} <= 0;
   end
   else if (~trap) begin
-    cmt_wen   <= debug_wb_rf_we;
+    cmt_wen   <= debug_wb_rf_we & (debug_wb_rf_wnum!=0);
     cmt_wdest <= {3'd0, debug_wb_rf_wnum};
     cmt_wdata <= debug_wb_rf_wdata;
     cmt_pc    <= debug_wb_pc;
@@ -161,7 +161,7 @@ always @(negedge clock) begin
 
     trap <= inst[6:0] == 7'h6b;
     trap_code <= regs[10][7:0];
-    cycleCnt <= cycleCnt + inst_valid;
+    cycleCnt <= cycleCnt + 1;
     instrCnt <= instrCnt + inst_valid;
   end
 end

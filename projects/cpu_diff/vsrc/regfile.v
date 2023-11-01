@@ -51,7 +51,7 @@ module regfile(
             rf[30] <= 64'b0;
             rf[31] <= 64'b0;
         end
-        else if (we) begin
+        else if (we & (waddr!=0)) begin
             rf[waddr] <= wdata;
         end
     end

@@ -1,9 +1,10 @@
 #!/bin/bash
 
 ysyxid=000000
-cpu_tests_dir=./bin/non-output/cpu-tests/
-riscv_tests_dir=./bin/non-output/riscv-tests/
-regression_tests_dir=./bin/custom-output/
+PWD=`pwd`
+cpu_tests_dir=$PWD/bin/non-output/cpu-tests/
+riscv_tests_dir=$PWD/bin/non-output/riscv-tests/
+regression_tests_dir=$PWD/bin/custom-output/
 
 mkdir build
 
@@ -13,7 +14,7 @@ function tests {
     file_name=`basename ${bin_file%.*}`
     printf "[%30s] " $file_name
     log_file=./build/$file_name.log
-    ./build.sh -e cpu_diff -d -b -s -a -i  $bin_file &> $log_file
+    ./build.sh -e cpu_diff -d -b -s -a --image="$bin_file" &> $log_file
     if (grep 'HIT GOOD TRAP' $log_file > /dev/null) then
       echo -e "\033[1;32mPASS!\033[0m"
       rm $log_file

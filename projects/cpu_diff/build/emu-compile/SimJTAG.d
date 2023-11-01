@@ -1,3 +1,3 @@
 SimJTAG.o: \
- /home/fluctlight/project/oscpu/libraries/difftest/src/test/csrc/common/SimJTAG.cpp \
- /home/fluctlight/project/oscpu/libraries/difftest/src/test/csrc/common/remote_bitbang.h
+ /home/fluctlight/project/A53_core/libraries/difftest/src/test/csrc/common/SimJTAG.cpp \
+ /home/fluctlight/project/A53_core/libraries/difftest/src/test/csrc/common/remote_bitbang.h

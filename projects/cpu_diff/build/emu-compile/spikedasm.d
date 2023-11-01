@@ -1,2 +1,2 @@
 spikedasm.o: \
- /home/fluctlight/project/oscpu/libraries/difftest/src/test/csrc/difftest/spikedasm.cpp
+ /home/fluctlight/project/A53_core/libraries/difftest/src/test/csrc/difftest/spikedasm.cpp

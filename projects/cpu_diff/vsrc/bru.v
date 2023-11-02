@@ -30,7 +30,7 @@ module bru(
     wire rs1_ge_rs2;
     wire rs1_geu_rs2;
 
-    // equal, not equal, low(signed), low(unsigned), greater and equal(signed)
+    // equal, not equal, less than(signed), less than(unsigned), greater and equal(signed)
     // greater and equal(unsigned)
     assign rs1_eq_rs2 = ~rs1_ne_rs2;
     assign rs1_ne_rs2 = |(rdata1 ^ rdata2);
@@ -39,12 +39,13 @@ module bru(
     assign rs1_ge_rs2 = ~rs1_lt_rs2;
     assign rs1_geu_rs2 = ~rs1_ltu_rs2;
 
-    wire [63:0] pc_plus_imm; 
-    wire [63:0] rs_plus_imm;
-    assign pc_plus_imm = pc + imm;
-
+    wire [31:0] pc_plus_imm; 
+    wire [31:0] rs_plus_imm;
+    wire [31:0] pc_plus_4;
+    assign pc_plus_imm = pc[31:0] + imm[31:0];
     //for jalr, set the least-significant bit to zero;
-    assign rs_plus_imm = (rdata1 + imm) & 32'hfffffffe;
+    assign rs_plus_imm = (rdata1[31:0] + imm[31:0]) & 32'hfffffffe;
+    assign pc_plus_4   = pc[31:0] + 4'd4;
 
     // to determine whether to jump
     assign br_e = inst_beq & rs1_eq_rs2
@@ -56,10 +57,10 @@ module bru(
                 | inst_jal
                 | inst_jalr;
 
-    assign br_addr = inst_beq | inst_bne | inst_blt | inst_bltu | inst_bge | inst_bgeu | inst_jal ? pc_plus_imm 
-                    :inst_jalr ? rs_plus_imm : 64'b0;
+    assign br_addr = inst_beq | inst_bne | inst_blt | inst_bltu | inst_bge | inst_bgeu | inst_jal ? {32'b0, pc_plus_imm} 
+                    :inst_jalr ? {32'b0, rs_plus_imm} : 64'b0;
 
     //bru 结果，可能需要写入到相应的寄存器中
-    assign br_result = pc + 4'd4;
+    assign br_result = {32'b0, pc_plus_4};
 
 endmodule

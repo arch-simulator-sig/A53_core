@@ -7,6 +7,7 @@ module WB
 )(
     input  wire clk,
     input  wire rst_n,
+    input  wire flush,
     input  wire [5:0] stall,
 
     input  wire [MEM2WB_WD-1:0] mem2wb_bus,
@@ -23,6 +24,9 @@ module WB
     reg [MEM2WB_WD-1:0] mem2wb_bus_r;
     always @ (posedge clk) begin
         if (!rst_n) begin
+            mem2wb_bus_r <= 0;
+        end
+        else if (flush) begin
             mem2wb_bus_r <= 0;
         end
         else if (stall[4]&(!stall[5])) begin

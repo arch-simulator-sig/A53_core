@@ -42,6 +42,17 @@ wire [`REG_BUS] r_data1;
 wire [`REG_BUS] r_data2;
 // regfile -> difftest
 wire [`REG_BUS] regs[0 : 31];
+// csr -> difftest
+wire [63:0] satp;
+wire [63:0] mstatus;
+wire [63:0] mie;
+wire [63:0] mtvec;
+wire [63:0] mtimecmp;
+wire [63:0] mtime;
+wire [63:0] mscratch;
+wire [63:0] mepc;
+wire [63:0] mcause;
+wire [63:0] mip;
 
 // exe_stage
 // exe_stage -> other stage
@@ -91,6 +102,7 @@ mycpu_pipeline
 u_mycpu_pipeline(
   .clk               (clk               ),
   .rst_n             (rst_n             ),
+  .timer_int         (0                 ),
   .stallreq_axi      (0                 ),
   .inst_sram_en      (inst_sram_en      ),
   .inst_sram_we      (inst_sram_we      ),
@@ -107,6 +119,16 @@ u_mycpu_pipeline(
   .debug_wb_rf_we    (debug_wb_rf_we    ),
   .debug_wb_rf_wnum  (debug_wb_rf_wnum  ),
   .debug_wb_rf_wdata (debug_wb_rf_wdata ),
+  .satp              (satp              ),
+  .mstatus           (mstatus           ),
+  .mie               (mie               ),
+  .mtvec             (mtvec             ),
+  .mtimecmp          (mtimecmp          ),
+  .mtime             (mtime             ),
+  .mscratch          (mscratch          ),
+  .mepc              (mepc              ),
+  .mcause            (mcause            ),
+  .mip               (mip               ),
   .regs_o            (regs              )
 );
 
@@ -233,20 +255,20 @@ DifftestCSRState DifftestCSRState(
   .clock              (clock),
   .coreid             (0),
   .priviledgeMode     (`RISCV_PRIV_MODE_M),
-  .mstatus            (0),
+  .mstatus            (mstatus),
   .sstatus            (0),
-  .mepc               (0),
+  .mepc               (mepc),
   .sepc               (0),
   .mtval              (0),
   .stval              (0),
-  .mtvec              (0),
+  .mtvec              (mtvec),
   .stvec              (0),
-  .mcause             (0),
+  .mcause             (mcause),
   .scause             (0),
-  .satp               (0),
-  .mip                (0),
-  .mie                (0),
-  .mscratch           (0),
+  .satp               (satp),
+  .mip                (mip),
+  .mie                (mie),
+  .mscratch           (mscratch),
   .sscratch           (0),
   .mideleg            (0),
   .medeleg            (0)

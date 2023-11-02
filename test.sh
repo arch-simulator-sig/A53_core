@@ -5,7 +5,7 @@ PWD=`pwd`
 cpu_tests_dir=$PWD/bin/non-output/cpu-tests/
 riscv_tests_dir=$PWD/bin/non-output/riscv-tests/
 regression_tests_dir=$PWD/bin/custom-output/
-coremark_dir=$PWD/bin/custom-output/benchmark/coremark/
+coremark_dir=$PWD/bin/target/
 mkdir build
 
 function tests {

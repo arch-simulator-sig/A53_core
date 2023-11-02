@@ -9,14 +9,14 @@ module sram(
     input wire [63:0] wdata,
     output reg [63:0] rdata
 );
-    RAMHelper RAMHelper(
-        .clk              (clk),
-        .en               (en),
-        .rIdx             ((addr - `PC_START) >> 3),
-        .rdata            (rdata),
-        .wIdx             ((addr - `PC_START) >> 3),
-        .wdata            (wdata),
-        .wmask            (we),
-        .wen              (|we)
-    );
+    // RAMHelper RAMHelper(
+    //     .clk              (clk),
+    //     .en               (en),
+    //     .rIdx             ((addr - `PC_START) >> 3),
+    //     .rdata            (rdata),
+    //     .wIdx             ((addr - `PC_START) >> 3),
+    //     .wdata            (wdata),
+    //     .wmask            (we),
+    //     .wen              (|we)
+    // );
 endmodule

@@ -49,7 +49,6 @@ wire [4 : 0]inst_type_o;
 // exe_stage -> regfile
 wire [`REG_BUS]rd_data;
 
-wire clk;
 wire clk = clock;
 wire rst_n;
 assign rst_n = ~reset;

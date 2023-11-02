@@ -3,16 +3,16 @@
 VERSION="0.0.1"
 
 A53_PATH=$(dirname $(readlink -f "$0"))
-LIBRARIES_FOLDER=$(A53_PATH)
-DIFFTEST_PATH=$(LIBRARIES_FOLDER)/difftest
-NEMU_PATH=$(LIBRARIES_FOLDER)/NEMU
-DRAMSIM3_FOLDER=$(LIBRARIES_FOLDER)/DRAMsim3
-PROJECT_PATH=$(A53_PATH)/projects/cpu_diff/vsrc
+LIBRARIES_FOLDER=$A53_PATH
+DIFFTEST_PATH=$LIBRARIES_FOLDER/difftest
+NEMU_PATH=$LIBRARIES_FOLDER/NEMU
+DRAMSIM3_FOLDER=$LIBRARIES_FOLDER/DRAMsim3
+PROJECT_PATH=$A53_PATH/projects/cpu_diff/vsrc
 DIFFTEST_PARAM=
 
 compile_dramsim3() {
     if [[ ! -f $A53_PATH/$DRAMSIM3_FOLDER/build/libdramsim3.a ]]; then
-        [[ ! `dpkg -l | grep cmake` ]] && sudo apt-get --yes install cmake
+        [[ ! $(dpkg -l | grep cmake) ]] && sudo apt-get --yes install cmake
         mkdir $A53_PATH/$DRAMSIM3_FOLDER/build
         cd $A53_PATH/$DRAMSIM3_FOLDER/build
         cmake -D COSIM=1 ..
@@ -38,8 +38,6 @@ compile_nemu() {
     fi
 }
 
-
-
 compile_difftest() {
     cd $DIFFTEST_PASH
     make DESIGN_DIR=$PROJECT_PATH $DIFFTEST_PARAM
@@ -49,7 +47,6 @@ compile_difftest() {
     fi
     cd $A53_PATH
 }
-
 
 export NEMU_HOME=$NEMU_HOME
 export NOOP_HOME=$PROJECT_PATH

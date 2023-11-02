@@ -46,7 +46,7 @@ extern "C" void vmem_sync(void) {
 void init_sdl() {
   SDL_Init(SDL_INIT_VIDEO);
   SDL_CreateWindowAndRenderer(SCREEN_W, SCREEN_H, 0, &window, &renderer);
-  SDL_SetWindowTitle(window, "NOOP");
+  SDL_SetWindowTitle(window, "A53");
   texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888,
       SDL_TEXTUREACCESS_STATIC, SCREEN_W, SCREEN_H);
 }

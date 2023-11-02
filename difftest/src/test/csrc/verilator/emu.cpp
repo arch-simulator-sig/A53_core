@@ -486,9 +486,9 @@ uint64_t Emulator::execute(uint64_t max_cycle, uint64_t max_instr) {
 inline char* Emulator::timestamp_filename(time_t t, char *buf) {
   char buf_time[64];
   strftime(buf_time, sizeof(buf_time), "%F@%T", localtime(&t));
-  char *noop_home = getenv("NOOP_HOME");
-  assert(noop_home != NULL);
-  int len = snprintf(buf, 1024, "%s/build/%s", noop_home, buf_time);
+  char *a53_home = getenv("A53_HOME");
+  assert(a53_home != NULL);
+  int len = snprintf(buf, 1024, "%s/build/%s", a53_home, buf_time);
   return buf + len;
 }
 
@@ -520,9 +520,9 @@ inline char* Emulator::cycle_wavefile(uint64_t cycles, time_t t) {
   static char buf[1024];
   char buf_time[64];
   strftime(buf_time, sizeof(buf_time), "%F@%T", localtime(&t));
-  char *noop_home = getenv("NOOP_HOME");
-  assert(noop_home != NULL);
-  int len = snprintf(buf, 1024, "%s/build/%s_%ld", noop_home, buf_time, cycles);
+  char *a53_home = getenv("A53_HOME");
+  assert(a53_home != NULL);
+  int len = snprintf(buf, 1024, "%s/build/%s_%ld", a53_home, buf_time, cycles);
   strcpy(buf + len, ".vcd");
   printf("dump wave to %s...\n", buf);
   return buf;

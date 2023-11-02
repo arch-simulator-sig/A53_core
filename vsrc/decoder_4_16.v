@@ -1,4 +1,3 @@
-`timescale 1ns / 1ps
 module decoder_4_16(
     input wire [3:0] in,
     output reg [15:0] out

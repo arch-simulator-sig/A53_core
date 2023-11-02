@@ -25,10 +25,9 @@ help() {
     exit 0
 }
 
-
 compile_dramsim3() {
     if [[ ! -f $OSCPU_PATH/$DRAMSIM3_FOLDER/build/libdramsim3.a ]]; then
-        [[ ! `dpkg -l | grep cmake` ]] && sudo apt-get --yes install cmake
+        [[ ! $(dpkg -l | grep cmake) ]] && sudo apt-get --yes install cmake
         mkdir $OSCPU_PATH/$DRAMSIM3_FOLDER/build
         cd $OSCPU_PATH/$DRAMSIM3_FOLDER/build
         cmake -D COSIM=1 ..
@@ -54,24 +53,6 @@ compile_nemu() {
     fi
 }
 
-compile_chisel() {
-    if [[ -f $PROJECT_PATH/build.sc ]]; then
-        # create soft link ($PROJECT_PATH/difftest -> $LIBRARIES_HOME/difftest)
-        if [[ ! -L $PROJECT_PATH/$DIFFTEST_FOLDER ]]; then
-            eval "ln -s \"`realpath --relative-to="$PROJECT_PATH" "$LIBRARIES_HOME"`/$DIFFTEST_FOLDER\" \"$PROJECT_PATH/$DIFFTEST_FOLDER\" 1>/dev/null 2>&1"
-        fi
-
-        cd $PROJECT_PATH
-        mkdir vsrc 1>/dev/null 2>&1
-        mill -i oscpu.runMain TopMain -td vsrc
-        if [ $? -ne 0 ]; then
-            echo "Failed to compile chisel!!!"
-            exit 1
-        fi
-        cd $OSCPU_PATH
-    fi
-}
-
 compile_difftest() {
     cd $DIFFTEST_HOME
     make DESIGN_DIR=$PROJECT_PATH $DIFFTEST_PARAM
@@ -88,7 +69,7 @@ build_diff_proj() {
     compile_chisel
 
     # Refresh the modification time of the top file, otherwise some changes to the RTL source code will not take effect in next compilation.
-    touch -m `find $PROJECT_PATH/$VSRC_FOLDER -name $DIFFTEST_TOP_FILE` 1>/dev/null 2>&1
+    touch -m $(find $PROJECT_PATH/$VSRC_FOLDER -name $DIFFTEST_TOP_FILE) 1>/dev/null 2>&1
     # create soft link ($BUILD_PATH/*.v -> $PROJECT_PATH/$VSRC_FOLDER/*.v)
     create_soft_link $BUILD_PATH $PROJECT_PATH/$VSRC_FOLDER \"*.v\"
     # create soft link ($BUILD_PATH/*.v -> $PROJECT_PATH/ysyx/ram/*.v)
@@ -101,24 +82,21 @@ build_proj() {
     cd $PROJECT_PATH
 
     # get all .cpp files
-    CSRC_LIST=`find -L $PROJECT_PATH/$CSRC_FOLDER -name "*.cpp"`
-    for CSRC_FILE in ${CSRC_LIST[@]}
-    do
+    CSRC_LIST=$(find -L $PROJECT_PATH/$CSRC_FOLDER -name "*.cpp")
+    for CSRC_FILE in ${CSRC_LIST[@]}; do
         CSRC_FILES="$CSRC_FILES $CSRC_FILE"
     done
-    
+
     # get all vsrc subfolders
-    VSRC_SUB_FOLDER=`find -L $VSRC_FOLDER -type d`
-    for SUBFOLDER in ${VSRC_SUB_FOLDER[@]}
-    do
+    VSRC_SUB_FOLDER=$(find -L $VSRC_FOLDER -type d)
+    for SUBFOLDER in ${VSRC_SUB_FOLDER[@]}; do
         INCLUDE_VSRC_FOLDERS="$INCLUDE_VSRC_FOLDERS -I$SUBFOLDER"
     done
     INCLUDE_VSRC_FOLDERS="$INCLUDE_VSRC_FOLDERS -I$YSYXSOC_HOME/ysyx/ram"
 
     # get all csrc subfolders
-    CSRC_SUB_FOLDER=`find -L $PROJECT_PATH/$CSRC_FOLDER -type d`
-    for SUBFOLDER in ${CSRC_SUB_FOLDER[@]}
-    do
+    CSRC_SUB_FOLDER=$(find -L $PROJECT_PATH/$CSRC_FOLDER -type d)
+    for SUBFOLDER in ${CSRC_SUB_FOLDER[@]}; do
         INCLUDE_CSRC_FOLDERS="$INCLUDE_CSRC_FOLDERS -I$SUBFOLDER"
     done
 
@@ -168,22 +146,25 @@ VERILATORFLAGS=
 # Check parameters
 while getopts 'he:bt:sa:f:l:gwcdm:r:yv:' OPT; do
     case $OPT in
-        h) help;;
-        e) PROJECT_FOLDER="$OPTARG";;
-        b) BUILD="true";;
-        t) V_TOP_FILE="$OPTARG";;
-        s) SIMULATE="true";;
-        a) PARAMETERS="$OPTARG";;
-        f) CFLAGS="$OPTARG";;
-        l) LDFLAGS="$OPTARG";;
-        g) GDB="true";;
-        w) CHECK_WAVE="true";;
-        c) CLEAN="true";;
-        d) DIFFTEST="true";;
-        m) DIFFTEST_PARAM="$OPTARG";;
-        r) TEST_CASES="$OPTARG"; DIFFTEST="true";;
-        v) VERILATORFLAGS="$OPTARG";;
-        ?) help;;
+    h) help ;;
+    e) PROJECT_FOLDER="$OPTARG" ;;
+    b) BUILD="true" ;;
+    t) V_TOP_FILE="$OPTARG" ;;
+    s) SIMULATE="true" ;;
+    a) PARAMETERS="$OPTARG" ;;
+    f) CFLAGS="$OPTARG" ;;
+    l) LDFLAGS="$OPTARG" ;;
+    g) GDB="true" ;;
+    w) CHECK_WAVE="true" ;;
+    c) CLEAN="true" ;;
+    d) DIFFTEST="true" ;;
+    m) DIFFTEST_PARAM="$OPTARG" ;;
+    r)
+        TEST_CASES="$OPTARG"
+        DIFFTEST="true"
+        ;;
+    v) VERILATORFLAGS="$OPTARG" ;;
+    ?) help ;;
     esac
 done
 
@@ -200,7 +181,6 @@ YSYXSOC_HOME=$OSCPU_PATH/$YSYXSOC_FOLDER
 export NEMU_HOME=$NEMU_HOME
 export NOOP_HOME=$PROJECT_PATH
 export DRAMSIM3_HOME=$DRAMSIM3_HOME
-
 
 # Clean
 if [[ "$CLEAN" == "true" ]]; then
@@ -220,7 +200,7 @@ if [[ "$SIMULATE" == "true" ]]; then
     create_bin_soft_link
 
     cd $BUILD_PATH
-    
+
     # run simulation program
     echo "Simulating..."
     [[ "$GDB" == "true" ]] && gdb -s $EMU_FILE --args ./$EMU_FILE $PARAMETERS || ./$EMU_FILE $PARAMETERS
@@ -236,7 +216,7 @@ fi
 # Check waveform
 if [[ "$CHECK_WAVE" == "true" ]]; then
     cd $BUILD_PATH
-    WAVE_FILE=`ls -t | grep .vcd | head -n 1`
+    WAVE_FILE=$(ls -t | grep .vcd | head -n 1)
     if [ -n "$WAVE_FILE" ]; then
         gtkwave $WAVE_FILE
         if [ $? -ne 0 ]; then
@@ -246,7 +226,7 @@ if [[ "$CHECK_WAVE" == "true" ]]; then
     else
         echo "*.vcd file does not exist!!!"
     fi
-    
+
     cd $OSCPU_PATH
 fi
 
@@ -259,15 +239,14 @@ if [[ -n $TEST_CASES ]]; then
     cd $BUILD_PATH
 
     mkdir log 1>/dev/null 2>&1
-    for FOLDER in ${TEST_CASES[@]}
-    do
-        BIN_FILES=`eval "find $FOLDER -mindepth 1 -maxdepth 1 -regex \".*\.\(bin\)\""`
+    for FOLDER in ${TEST_CASES[@]}; do
+        BIN_FILES=$(eval "find $FOLDER -mindepth 1 -maxdepth 1 -regex \".*\.\(bin\)\"")
         for BIN_FILE in $BIN_FILES; do
-            FILE_NAME=`basename ${BIN_FILE%.*}`
+            FILE_NAME=$(basename ${BIN_FILE%.*})
             printf "[%30s] " $FILE_NAME
             LOG_FILE=log/$FILE_NAME-log.txt
-            ./$EMU_FILE -i $BIN_FILE &> $LOG_FILE
-            if (grep 'HIT GOOD TRAP' $LOG_FILE > /dev/null) then
+            ./$EMU_FILE -i $BIN_FILE &>$LOG_FILE
+            if (grep 'HIT GOOD TRAP' $LOG_FILE >/dev/null); then
                 echo -e "\033[1;32mPASS!\033[0m"
                 rm $LOG_FILE
             else

@@ -13,20 +13,17 @@
 #
 # See the Mulan PSL v2 for more details.
 #***************************************************************************************
+export A53_HOME = $(abspath $(shell pwd)/..)
+export DRAMSIM3_HOME=$(A53_HOME)/DRAMsim3
+export NEMU_HOME=$(A53_HOME)/NEMU
+export DIFFTEST_HOME=$(A53_HOME)/difftest
 
 SIM_TOP    ?= SimTop
-DESIGN_DIR ?= ../../projects/cpu_diff/vsrc
+DESIGN_DIR ?= $(A53_HOME)/vsrc
 NUM_CORES  ?= 1
 
-BUILD_DIR = $(DESIGN_DIR)/build
-SIM_TOP_V = $(BUILD_DIR)/$(SIM_TOP).v
-
-DIFF_SCALA_FILE = $(shell find ./src/main/scala -name '*.scala')
-SCALA_FILE = $(shell find $(DESIGN_DIR)/src/main/scala -name '*.scala')
-
-# generate SimTop.v
-$(SIM_TOP_V): $(DIFF_SCALA_FILE)
-	$(MAKE) -C $(DESIGN_DIR) sim-verilog
+BUILD_DIR = $(A53_HOME)/build
+SIM_TOP_V = $(DESIGN_DIR)/$(SIM_TOP).v
 
 # co-simulation with DRAMsim3
 ifeq ($(WITH_DRAMSIM3),1)
@@ -52,6 +49,7 @@ DIFFTEST_CSRC_DIR = $(abspath ./src/test/csrc/difftest)
 DIFFTEST_CXXFILES = $(shell find $(DIFFTEST_CSRC_DIR) -name "*.cpp")
 
 SIM_VSRC = $(shell find ./src/test/vsrc/common -name "*.v" -or -name "*.sv")
+SIM_VSRC += $(shell find $(DESIGN_DIR) -name "*.v" -or -name "*.sv")
 
 include verilator.mk
 include vcs.mk

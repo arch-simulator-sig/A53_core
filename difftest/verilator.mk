@@ -19,25 +19,32 @@ include config/verilator.mk
 EMU_TOP      = SimTop
 
 EMU_CSRC_DIR = $(abspath ./src/test/csrc)
-EMU_CXXFILES = $(shell find $(EMU_CSRC_DIR) -name "*.cpp") $(SIM_CXXFILES) $(DIFFTEST_CXXFILES)
+EMU_CXXFILES = $(shell find $(EMU_CSRC_DIR) -name "*.cpp" -or -name "*.cc") $(SIM_CXXFILES) $(DIFFTEST_CXXFILES)
 EMU_CXXFLAGS += -std=c++11 -static -Wall -I$(EMU_CSRC_DIR) -I$(SIM_CSRC_DIR) -I$(DIFFTEST_CSRC_DIR)
 EMU_CXXFLAGS += -DVERILATOR -DNUM_CORES=$(NUM_CORES)
 EMU_CXXFLAGS += $(shell sdl2-config --cflags) -fPIE
 EMU_LDFLAGS  += -lpthread -lSDL2 -ldl -lz -lsqlite3
 
 EMU_VFILES    = $(SIM_VSRC)
+EMU_VINC_PATH = $(DESIGN_DIR)
 
 CCACHE := $(if $(shell which ccache),ccache,)
 ifneq ($(CCACHE),)
 export OBJCACHE = ccache
 endif
 
-VEXTRA_FLAGS  = -I$(abspath $(BUILD_DIR)) --x-assign unique -O3 -CFLAGS "$(EMU_CXXFLAGS)" -LDFLAGS "$(EMU_LDFLAGS)"
+VEXTRA_FLAGS = $(addprefix -I, $(EMU_VINC_PATH)) --x-assign unique -O3 -CFLAGS "$(EMU_CXXFLAGS)" -LDFLAGS "$(EMU_LDFLAGS)"
 
 # Verilator trace support
-EMU_TRACE ?=
-ifeq ($(EMU_TRACE),1)
-VEXTRA_FLAGS += --trace
+DUMP_VCD=1
+ifeq ('${DUMP_VCD}',1) 
+EMU_CXXFLAGS += -DDUMP_VCD 
+WAVEFILE = vcd 
+WAVEFLAG = --trace
+else
+EMU_CXXFLAGS += -DDUMP_FST 
+WAVEFILE = fst 
+WAVEFLAG = --trace-fst
 endif
 
 # Verilator multi-thread support
@@ -61,6 +68,7 @@ VEXTRA_FLAGS += --coverage-line --coverage-toggle
 endif
 
 # co-simulation with DRAMsim3
+WITH_DRAMSIM3 ?=
 ifeq ($(WITH_DRAMSIM3),1)
 EMU_CXXFLAGS += -I$(DRAMSIM3_HOME)/src
 EMU_CXXFLAGS += -DWITH_DRAMSIM3 -DDRAMSIM3_CONFIG=\\\"$(DRAMSIM3_HOME)/configs/XiangShan.ini\\\" -DDRAMSIM3_OUTDIR=\\\"$(BUILD_DIR)\\\"
@@ -86,11 +94,11 @@ VERILATOR_FLAGS =                   \
   +define+RANDOMIZE_GARBAGE_ASSIGN  \
   +define+RANDOMIZE_DELAY=0         \
   -Wno-STMTDLY -Wno-WIDTH           \
-  $(VEXTRA_FLAGS)                   \
   --assert                          \
   --stats-vars                      \
   --output-split 30000              \
-  --output-split-cfuncs 30000
+  --output-split-cfuncs 30000       \
+  $(VEXTRA_FLAGS)
 
 EMU_MK := $(BUILD_DIR)/emu-compile/V$(EMU_TOP).mk
 EMU_DEPS := $(EMU_VFILES) $(EMU_CXXFILES)
@@ -99,12 +107,12 @@ EMU_HEADERS := $(shell find $(EMU_CSRC_DIR) -name "*.h")     \
                $(shell find $(DIFFTEST_CSRC_DIR) -name "*.h")
 EMU := $(BUILD_DIR)/emu
 
-$(EMU_MK): $(SIM_TOP_V) | $(EMU_DEPS)
+$(EMU_MK): $(EMU_DEPS)
 	@mkdir -p $(@D)
 	@echo "\n[verilator] Generating C++ files..." >> $(TIMELOG)
 	@date -R | tee -a $(TIMELOG)
 	$(TIME_CMD) verilator --cc --exe $(VERILATOR_FLAGS) \
-		-o $(abspath $(EMU)) -Mdir $(@D) $^ $(EMU_DEPS)
+		-o $(abspath $(EMU)) -Mdir $(@D) $^
 	find $(BUILD_DIR) -name "VSimTop.h" | xargs sed -i 's/private/public/g' 
 
 EMU_COMPILE_FILTER =
@@ -119,7 +127,7 @@ $(EMU): $(EMU_MK) $(EMU_DEPS) $(EMU_HEADERS) $(REF_SO)
 ifeq ($(REMOTE),localhost)
 	$(MAKE) build_emu_local
 else
-	ssh -tt $(REMOTE) 'export NOOP_HOME=$(NOOP_HOME); export NEMU_HOME=$(NEMU_HOME); $(MAKE) -C $(NOOP_HOME)/difftest -j230 build_emu_local'
+	ssh -tt $(REMOTE) 'export A53_HOME=$(A53_HOME); export NEMU_HOME=$(NEMU_HOME); $(MAKE) -C $(A53_HOME)/difftest -j230 build_emu_local'
 endif
 
 # log will only be printed when (B<=GTimer<=E) && (L < loglevel)
@@ -127,8 +135,8 @@ endif
 B ?= 0
 E ?= 0
 
-ifndef NOOP_HOME
-$(error NOOP_HOME is not set)
+ifndef A53_HOME
+$(error A53_HOME is not set)
 endif
 EMU_FLAGS = -s $(SEED) -b $(B) -e $(E) $(SNAPSHOT_OPTION) $(WAVEFORM) $(EMU_ARGS)
 
@@ -139,10 +147,5 @@ ifneq ($(REMOTE),localhost)
 	ls build
 endif
 	$(EMU) -i $(IMAGE) --diff=$(REF_SO) $(EMU_FLAGS)
-
-coverage:
-	verilator_coverage --annotate build/logs/annotated --annotate-min 1 build/logs/coverage.dat
-	python3 scripts/coverage/coverage.py build/logs/annotated/XSSimTop.v build/XSSimTop_annotated.v
-	python3 scripts/coverage/statistics.py build/XSSimTop_annotated.v >build/coverage.log
 
 .PHONY: build_emu_local

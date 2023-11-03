@@ -2,12 +2,10 @@
 
 initialization:
 ```
-git submodule update --init --recursive
-cd difftest
-make difftest_verilog
+make init
 ```
 
-如果make difftest_verilog报错，检查difftest/.mill-version里面版本和现有的mill --version是否匹配
+提前检查difftest/.mill-version里面版本和现有的mill --version是否匹配
 
 compile:
 ```

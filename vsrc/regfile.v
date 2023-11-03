@@ -11,8 +11,9 @@ module regfile(
     input wire we,
     input wire [4:0] waddr,
     input wire [63:0] wdata,
-
+    `ifdef DIFF_EN
     output wire [63:0] regs_o [0:31]
+    `endif
 );
     reg [63:0] rf [31:0];
 
@@ -61,10 +62,12 @@ module regfile(
     // assign rdata2 = we & (rs2==waddr) ? wdata : |rs2 ? rf[rs2] : 32'b0;
     assign rdata2 = ~(|rs2) ? 64'b0 : we & (rs2==waddr) ? wdata : rf[rs2];
 
+    `ifdef DIFF_EN
     genvar i;
 	generate
 		for (i = 0; i < 32; i = i + 1) begin
 			assign regs_o[i] = (we & waddr == i & |i) ? wdata : rf[i];
 		end
 	endgenerate
+    `endif
 endmodule

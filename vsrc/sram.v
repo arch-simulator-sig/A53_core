@@ -13,7 +13,7 @@ module sram(
 
     DifftestMem2P RAMHelper(
         .clock              (clk),
-        .reset              (0),
+        .reset              (rst_n),
         .read_valid         (1),
         .read_index         ((addr - `PC_START) >> 3),
         .read_data_0        (rdata_tmp),

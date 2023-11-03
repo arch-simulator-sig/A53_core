@@ -130,7 +130,9 @@ u_mycpu_pipeline(
   .mepc              (mepc              ),
   .mcause            (mcause            ),
   .mip               (mip               ),
+      `ifdef DIFF_EN
   .regs_o            (regs              )
+  `endif
 );
 
 sram u_inst_sram(
@@ -152,6 +154,9 @@ sram u_data_sram(
   .wdata (data_sram_wdata ),
   .rdata (data_sram_rdata )
 );
+
+
+`ifdef DIFF_EN
 
 // Difftest
 reg cmt_wen;
@@ -206,8 +211,8 @@ DifftestInstrCommit DifftestInstrCommit(
   .io_lqIdx                 (0),
   .io_sqIdx                 (0),  
 //TODO: add signal
-  .io_isLoad                (),
-  .io_isStore               (),
+  .io_isLoad                (0),
+  .io_isStore               (0),
   .io_nFused                (0),
   .io_special               (0),
   .io_coreid                (0),
@@ -296,8 +301,8 @@ DifftestCSRState DifftestCSRState(
 
 DifftestTop DifftestTop(
   .clock (clock),
-  .reset (0),
+  .reset (rst_n),
   .difftest_step (difftest_step)
 );
-
+`endif
 endmodule

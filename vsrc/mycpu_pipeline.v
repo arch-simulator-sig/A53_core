@@ -41,7 +41,9 @@ module mycpu_pipeline
     output wire [63:0]  mepc,
     output wire [63:0]  mcause,
     output wire [63:0]  mip,
+`ifdef DIFF_EN
     output wire [63:0]  regs_o[0:31]
+`endif
 );
 
     wire [ID2EX_WD-1:0] id2ex_bus;
@@ -93,7 +95,9 @@ module mycpu_pipeline
         .csr_vec_h       (csr_vec_h       ),
         .wb2rf_bus       (wb2rf_bus       ),
         .id2ex_bus       (id2ex_bus       ),
+    `ifdef DIFF_EN
         .regs_o          (regs_o)
+    `endif
     );
 
     EX 

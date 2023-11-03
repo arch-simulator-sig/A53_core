@@ -20,8 +20,9 @@ module ID
 
     input wire [WB2RF_WD-1:0] wb2rf_bus,
     output wire [ID2EX_WD-1:0] id2ex_bus,
-
+    `ifdef DIFF_EN
     output wire [63:0] regs_o[0:31] 
+    `endif
 );
 
     reg pc_valid_r;
@@ -151,7 +152,9 @@ module ID
         .we     (wb_rf_we     ),
         .waddr  (wb_rf_waddr  ),
         .wdata  (wb_rf_wdata  ),
+`ifdef DIFF_EN
         .regs_o (regs_o)
+`endif
     );
 
     assign csr_vec = {csr_vec_h_r, csr_vec_l};

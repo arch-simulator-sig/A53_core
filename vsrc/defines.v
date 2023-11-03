@@ -18,3 +18,5 @@
 `define WB2EX_WD 600
 
 `define StallBus 6
+
+`define DIFF_EN  1

@@ -1,9 +1,9 @@
 [submodule "difftest"]
 	path = difftest
-	url = git@github.com:arch-simulator-sig/difftest.git
+	url = https://gitee.com/dzw1208/difftest
 [submodule "DRAMsim3"]
 	path = DRAMsim3
-	url = git@github.com:arch-simulator-sig/DRAMsim3.git
+	url = https://gitee.com/dzw1208/DRAMsim3.git
 [submodule "NEMU"]
 	path = NEMU
-	url = git@github.com:arch-simulator-sig/NEMU.git
+	url = https://gitee.com/dzw1208/NEMU.git

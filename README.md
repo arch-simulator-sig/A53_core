@@ -1,9 +1,14 @@
 # 20231101 A53适配修改
 
+initialization:
 ```
 git submodule update --init --recursive
 cd difftest
 make difftest_verilog
+```
+
+compile:
+```
 make emu
 ```
 

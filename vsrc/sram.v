@@ -11,10 +11,11 @@ module sram(
 );
     wire [63:0] rdata_tmp;
 
+`ifdef DIFF_EN
     DifftestMem2P RAMHelper(
         .clock              (clk),
         .reset              (rst_n),
-        .read_valid         (1),
+        .read_valid         (),
         .read_index         ((addr - `PC_START) >> 3),
         .read_data_0        (rdata_tmp),
         .write_valid        (|we),
@@ -22,6 +23,7 @@ module sram(
         .write_data_0       (wdata),
         .write_mask_0       ({{8{we[7]}},{8{we[6]}},{8{we[5]}},{8{we[4]}},{8{we[3]}},{8{we[2]}},{8{we[1]}},{8{we[0]}}})
         );
+`endif
 
     always @(posedge clk) begin
         if (!rst_n) begin

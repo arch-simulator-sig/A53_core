@@ -10,16 +10,28 @@ module sram(
     output reg [63:0] rdata
 );
     wire [63:0] rdata_tmp;
-    RAMHelper RAMHelper(
-        .clk              (clk),
-        .en               (en),
-        .rIdx             ((addr - `PC_START) >> 3),
-        .rdata            (rdata_tmp),
-        .wIdx             ((addr - `PC_START) >> 3),
-        .wdata            (wdata),
-        .wmask            ({{8{we[7]}},{8{we[6]}},{8{we[5]}},{8{we[4]}},{8{we[3]}},{8{we[2]}},{8{we[1]}},{8{we[0]}}}),
-        .wen              (|we)
-    );
+    // RAMHelper RAMHelper(
+    //     .clk              (clk),
+    //     .en               (en),
+    //     .rIdx             ((addr - `PC_START) >> 3),
+    //     .rdata            (rdata_tmp),
+    //     .wIdx             ((addr - `PC_START) >> 3),
+    //     .wdata            (wdata),
+    //     .wmask            ({{8{we[7]}},{8{we[6]}},{8{we[5]}},{8{we[4]}},{8{we[3]}},{8{we[2]}},{8{we[1]}},{8{we[0]}}}),
+    //     .wen              (|we)
+    // );
+
+    DifftestMem2P RAMHelper(
+        .clock              (clk),
+        .reset              (0),
+        .read_valid         (1),
+        .read_index         ((addr - `PC_START) >> 3),
+        .read_data_0        (rdata_tmp),
+        .write_valid        (|we),
+        .write_index        ((addr - `PC_START) >> 3),
+        .write_data_0       (wdata),
+        .write_mask_0       ({{8{we[7]}},{8{we[6]}},{8{we[5]}},{8{we[4]}},{8{we[3]}},{8{we[2]}},{8{we[1]}},{8{we[0]}}})
+        );
 
     always @(posedge clk) begin
         if (!rst_n) begin

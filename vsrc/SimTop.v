@@ -16,7 +16,8 @@ module SimTop(
     output        io_uart_out_valid,
     output [7:0]  io_uart_out_ch,
     output        io_uart_in_valid,
-    input  [7:0]  io_uart_in_ch
+    input  [7:0]  io_uart_in_ch,
+    output wire   difftest_step
 );
 
 // if_stage
@@ -204,6 +205,7 @@ DifftestInstrCommit DifftestInstrCommit(
   // .io_wdata              (cmt_wdata)
 
   .clock                    (clock),
+  .enable                   (1),
   .io_valid                 (cmt_valid),
   .io_skip                  (0),
   .io_isRVC                 (0),
@@ -229,7 +231,9 @@ DifftestInstrCommit DifftestInstrCommit(
 
 
 DifftestArchIntRegState DifftestArchIntRegState (
-.coreid                   (0),
+.clock                    (clock),
+.enable                   (1),
+.io_coreid                (0),
 .io_value_0               (regs_diff[0]),
 .io_value_1               (regs_diff[1]),
 .io_value_2               (regs_diff[2]),
@@ -240,7 +244,6 @@ DifftestArchIntRegState DifftestArchIntRegState (
 .io_value_7               (regs_diff[7]),
 .io_value_8               (regs_diff[8]),
 .io_value_9               (regs_diff[9]),
-.io_value_10              (regs_diff[10]),
 .io_value_10              (regs_diff[10]),
 .io_value_11              (regs_diff[11]),
 .io_value_12              (regs_diff[12]),
@@ -276,6 +279,7 @@ DifftestTrapEvent DifftestTrapEvent(
   // .cycleCnt           (cycleCnt),
   // .instrCnt           (instrCnt)
   .clock              (clock),
+  .enable             (1),
   .io_hasTrap         (trap),
   .io_cycleCnt        (cycleCnt),
   .io_instrCnt        (instrCnt),
@@ -289,7 +293,8 @@ DifftestTrapEvent DifftestTrapEvent(
 
 DifftestCSRState DifftestCSRState(
   .clock                  (clock),
-  .coreid                 (0),
+  .enable                 (1),
+  .io_coreid              (0),
   .io_priviledgeMode      (`RISCV_PRIV_MODE_M),
   .io_mstatus             (mstatus),
   .io_sstatus             (0),
@@ -308,6 +313,12 @@ DifftestCSRState DifftestCSRState(
   .io_sscratch            (0),
   .io_mideleg             (0),
   .io_medeleg             (0)
+);
+
+DifftestTop DifftestTop(
+  .clock (clock),
+  .reset (0),
+  .difftest_step (difftest_step)
 );
 
 endmodule

@@ -10,7 +10,7 @@ emu: verilog
 	make -C difftest emu
 
 # test: emu
-# 	cd	$(PWD)/scripts && bash test.sh -
+# 	cd	$(PWD)/scripts && bash test.sh -r
 
 clean:
 	rm -rf build

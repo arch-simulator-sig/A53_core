@@ -19,4 +19,7 @@
 
 `define StallBus 6
 
+
+`define BTB_LEN  32
+`define RAS_LEN  16
 `define DIFF_EN  1

@@ -14,3 +14,7 @@
 
 config/*
 build/*
+
+DRAMsim3/
+NEMU/
+

@@ -1,5 +1,9 @@
 # 20231101 A53适配修改
 
+git clone https://gitee.com/dzw1208/DRAMsim3.git
+git clone https://gitee.com/dzw1208/difftest.git
+git clone https://gitee.com/dzw1208/NEMU.git
+
 initialization:
 ```
 git submodule update --init --recursive

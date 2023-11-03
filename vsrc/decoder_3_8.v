@@ -1,3 +1,4 @@
+`timescale 1ns / 1ps
 module decoder_3_8 (
     input wire [2:0] in,
     output reg [7:0] out

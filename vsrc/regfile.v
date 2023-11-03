@@ -51,7 +51,7 @@ module regfile(
             rf[30] <= 64'b0;
             rf[31] <= 64'b0;
         end
-        else if (we) begin
+        else if (we & (waddr!=0)) begin
             rf[waddr] <= wdata;
         end
     end
@@ -64,7 +64,7 @@ module regfile(
     genvar i;
 	generate
 		for (i = 0; i < 32; i = i + 1) begin
-			assign regs_o[i] = (we & waddr == i & i != 0) ? wdata : rf[i];
+			assign regs_o[i] = (we & waddr == i & |i) ? wdata : rf[i];
 		end
 	endgenerate
 endmodule

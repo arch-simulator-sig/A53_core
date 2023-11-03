@@ -190,20 +190,6 @@ always @(negedge clock) begin
 end
 
 DifftestInstrCommit DifftestInstrCommit(
-  // .clock                (clock),
-  // .io_coreid             (0),
-  // .io_index              (0),
-  // .io_valid              (cmt_valid),
-  // .io_pc                 (cmt_pc),
-  // .io_instr              (cmt_inst),
-  // .io_special            (0),
-  // .io_skip               (0),
-  // .io_isRVC              (0),
-  // .io_scFailed           (0),
-  // .io_wen                (cmt_wen),
-  // .io_wdest              (cmt_wdest),
-  // .io_wdata              (cmt_wdata)
-
   .clock                    (clock),
   .enable                   (1),
   .io_valid                 (cmt_valid),
@@ -271,13 +257,6 @@ DifftestArchIntRegState DifftestArchIntRegState (
 
 
 DifftestTrapEvent DifftestTrapEvent(
-  // .clock              (clock),
-  // .coreid             (0),
-  // .valid              (trap),
-  // .code               (trap_code),
-  // .pc                 (cmt_pc),
-  // .cycleCnt           (cycleCnt),
-  // .instrCnt           (instrCnt)
   .clock              (clock),
   .enable             (1),
   .io_hasTrap         (trap),

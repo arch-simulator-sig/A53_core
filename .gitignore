@@ -17,4 +17,5 @@ build/*
 
 DRAMsim3/
 NEMU/
+difftest/
 

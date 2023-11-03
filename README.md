@@ -1,8 +1,11 @@
 # 20231101 A53适配修改
 
+```
 git clone https://gitee.com/dzw1208/DRAMsim3.git
 git clone https://gitee.com/dzw1208/difftest.git
 git clone https://gitee.com/dzw1208/NEMU.git
+
+```
 
 initialization:
 ```
@@ -10,6 +13,8 @@ git submodule update --init --recursive
 cd difftest
 make difftest_verilog
 ```
+
+如果make difftest_verilog报错，检查difftest/.mill-version里面版本和现有的mill --version是否匹配
 
 compile:
 ```

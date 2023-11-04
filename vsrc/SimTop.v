@@ -210,7 +210,7 @@ DifftestInstrCommit DifftestInstrCommit(
   .io_robIdx                (0),
   .io_lqIdx                 (0),
   .io_sqIdx                 (0),  
-//TODO: add signal
+//TODO: add signal isLoad / isStore
   .io_isLoad                (0),
   .io_isStore               (0),
   .io_nFused                (0),
@@ -301,7 +301,7 @@ DifftestCSRState DifftestCSRState(
 
 DifftestTop DifftestTop(
   .clock (clock),
-  .reset (rst_n),
+  .reset (reset),
   .difftest_step (difftest_step)
 );
 `endif

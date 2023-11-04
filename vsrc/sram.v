@@ -14,8 +14,8 @@ module sram(
 `ifdef DIFF_EN
     DifftestMem2P RAMHelper(
         .clock              (clk),
-        .reset              (rst_n),
-        .read_valid         (),
+        .reset              (~rst_n),
+        .read_valid         (en),
         .read_index         ((addr - `PC_START) >> 3),
         .read_data_0        (rdata_tmp),
         .write_valid        (|we),

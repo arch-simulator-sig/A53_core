@@ -12,9 +12,24 @@ compile:
 make emu
 ```
 
-## 运行test
-scripts看test.sh
+bin dir structure
+```
+├── coremark
+│   └── coremark-riscv64-kjw.bin
+├── cpu-tests
+│   ├── add-cpu-tests.bin
+│   ├── add-cpu-tests.elf
+│   ├── add-cpu-tests.txt
+    ...
+    ...
+└── riscv-tests
+    ├── addi-riscv-tests.bin
+    ├── addi-riscv-tests.elf
+    ├── addi-riscv-tests.txt
+```
 
+## 运行test
+make test
 ## TODO：
 [x] 接入difftest
 
@@ -34,3 +49,4 @@ scripts看test.sh
     3. 性能模块 btb ras 
 
 
+sk-nHpU9NaOKJPjSMCUzSkPIskMlxARYF8kcdQtFaKGChgJUeSv

@@ -4,10 +4,10 @@ init:
 	git submodule update --init --recursive
 	$(MAKE) -C difftest difftest_verilog
 
-emu: verilog
+emu:
 	$(MAKE) -C difftest emu
 
-test: emu
+test:
 	$(MAKE) -C bin-to-run run
 
 clean:

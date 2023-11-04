@@ -281,7 +281,7 @@ DifftestCSRState DifftestCSRState(
   .io_coreid              (0),
   .io_priviledgeMode      (`RISCV_PRIV_MODE_M),
   .io_mstatus             (mstatus),
-  .io_sstatus             (0),
+  .io_sstatus             (64'h200000000),
   .io_mepc                (mepc),
   .io_sepc                (0),
   .io_mtval               (0),

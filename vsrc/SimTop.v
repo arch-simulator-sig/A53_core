@@ -301,7 +301,7 @@ DifftestCSRState DifftestCSRState(
 
 DifftestTop DifftestTop(
   .clock (clock),
-  .reset (rst_n),
+  .reset (reset),
   .difftest_step (difftest_step)
 );
 `endif

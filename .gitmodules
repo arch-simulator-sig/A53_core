@@ -7,3 +7,6 @@
 [submodule "NEMU"]
 	path = NEMU
 	url = git@github.com:arch-simulator-sig/NEMU.git
+[submodule "bin-to-run"]
+	path = bin-to-run
+	url = git@github.com:arch-simulator-sig/A53-bin-to-run

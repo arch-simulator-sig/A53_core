@@ -2,15 +2,13 @@ PWD=$(shell pwd)
 
 init:
 	git submodule update --init --recursive
-
-verilog:
-	make -C difftest difftest_verilog
+	$(MAKE) -C difftest difftest_verilog
 
 emu: verilog
-	make -C difftest emu
+	$(MAKE) -C difftest emu
 
 test: emu
-	cd	$(PWD)/scripts && bash test.sh -r
+	$(MAKE) -C bin-to-run run
 
 clean:
 	rm -rf build build-test

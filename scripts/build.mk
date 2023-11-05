@@ -82,8 +82,7 @@ gencode: $(DECODE_CODE) $(WALLACE_CODE)
 # build
 $(BIN): $(DEP_OBJS) $(VSRCS) $(CSRCS) $(OBJS) $(SV_CONFIG) $(DECODE_CODE)
 	$(VERILATOR) $(VERILATOR_CFLAGS) $(V_INCFLAGS) --top-module $(TOPNAME) $(VSRCS) $(CSRCS) $(abspath $(OBJS)) $(addprefix -CFLAGS , $(CXXFLAGS)) $(DEP_FLAG) $(addprefix -LDFLAGS , $(LDFLAGS)) --Mdir $(OBJ_DIR) -o $(abspath $(BIN))
-	 $(call git_commit, "build RTL")
-	 
+	
 pre: $(CORE_VSRCS)
 	$(VERILATOR) -E -P $(V_INCFLAGS) -DSYNTHESIS $(CORE_VSRCS) $(UTIL_VSRCS) | sed '/^[[:space:]]*$$/d' > $(PRESV)
 

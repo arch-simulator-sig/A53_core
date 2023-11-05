@@ -28,11 +28,9 @@ IMG ?=
 run-env: $(BIN) $(DIFF_SO)
 
 run: run-env
-	$(call git_commit, "sim RTL")
 	$(BIN) $(ARGS) $(IMG)
 
 lldb: eun-env
-	$(call git_commit, "lldb NPC")
 	lldb $(BIN) -- $(ARGS) $(IMG)
 
 clean:

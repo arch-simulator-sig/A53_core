@@ -9,7 +9,6 @@ define add_arg
 endef
 
 vscode-debug: run-env
-	$(call git_commit, "debug NPC with VSCode")
 	@args=($(ARGS)); \
 	$(call mod_laun,program,,\"$(BIN)\") \
 	$(call mod_laun,args,,[]) \

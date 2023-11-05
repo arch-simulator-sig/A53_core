@@ -1,0 +1,158 @@
+mainmenu "NPC Configuration Menu"
+
+config VERILATOR
+  bool "Simulate with Verilator"
+  default y
+
+config MEM_BASE
+  hex "Memory base address"
+  default 0x80000000
+
+config MEM_SIZE
+  hex "Memory size"
+  default 0x8000000
+  
+menuconfig DEVICE
+  bool "Simulate devices"
+  default n
+
+if DEVICE
+
+config SERIAL
+  bool "Enable serial"
+  default y
+
+config SERIAL_MMIO
+  depends on SERIAL
+  hex "MMIO address of the serial controller"
+  default 0xa00003f8
+
+config TIMER
+  bool "Enable timer"
+  default y
+
+config RTC_MMIO
+  depends on TIMER
+  hex "MMIO address of the timer"
+  default 0xa0000048
+  
+config VGA
+  bool "Enable VGA"
+  default y
+
+config VGA_CTL_MMIO
+  depends on VGA
+  hex "MMIO address of the VGA controller"
+  default 0xa0000100
+
+config VGA_CTL_MMIO
+  depends on VGA
+  hex "MMIO address of the VGA controller"
+  default 0xa0000100
+
+config FB_ADDR
+  depends on VGA
+  hex "Physical address of the VGA frame buffer"
+  default 0xa1000000
+
+config KEYBRD
+  bool "Enable Keyboard"
+  default y
+
+config KEYBRD_MMIO
+  depends on KEYBRD
+  hex "MMIO address of the Keyboard"
+  default 0xa0000060
+
+endif # DEVICE
+
+menuconfig TRACE
+  depends on VERILATOR
+  bool "Enable tracer"
+  default y
+
+if TRACE
+
+config TRACE_START
+  int "When tracing is enabled (unit: number of instructions)"
+  default 0
+
+config TRACE_END
+  int "When tracing is disabled (unit: number of instructions)"
+  default 10000
+
+config ITRACE
+  bool "Enable instruction tracer"
+  default y
+
+config ITRACE_COND
+  depends on ITRACE
+  string "Only trace instructions when the condition is true"
+  default "true"
+
+config MTRACE
+  bool "Enable memory tracer"
+  default y
+
+config MTRACE_LEFT
+  depends on MTRACE
+  hex "The left bound of memory to trace"
+  default 0x80000000
+
+config MTRACE_RIGHT
+  depends on MTRACE
+  hex "The right bound of memory to trace"
+  default 0x87ffffff
+
+config MTRACE_FULL
+  depends on MTRACE
+  bool "Trace when the memory is actually accessed"
+  default n
+
+config FTRACE
+  depends on ITRACE
+  bool "Enable function tracer"
+  default y
+
+config DTRACE
+  bool "Trace when devices is accessed"
+  default y
+  
+config WTRACE
+  bool "Enable waveform tracer"
+  default n
+
+config WTRACE_START
+  depends on WTRACE
+  int "When waveform tracer is enabled (unit: number of instructions)"
+  default 0
+
+config WTRACE_COUNT
+  depends on WTRACE
+  int "The number of instructions that the tracer dumps waveforms for"
+  default 100
+
+config WTRACE_CYCLE_LIMIT
+  depends on WTRACE
+  int "The number of cycles that the tracer dumps waveforms for"
+  default 10000
+
+endif # TRACE
+
+config WATCHPOINT
+  depends on VERILATOR
+  bool "Enable watchpoint"
+  default y
+  
+config DIFFTEST
+  depends on VERILATOR
+  bool "Enable differential testing"
+  default n
+  help
+    Enable differential testing with a reference design.
+    Note that this will significantly reduce the performance of NEMU.
+    
+config MUL_VERIFY
+  bool "use * operator instead of sophisticated multiplier"
+  default y
+

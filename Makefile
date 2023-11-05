@@ -1,4 +1,5 @@
 WORK_DIR = $(shell pwd)
+NEMU_HOME = $(WORK_DIR)/nemu
 V_SRC_HOME = $(WORK_DIR)/vsrc
 CC_SRC_HOME = $(WORK_DIR)/csrc
 
@@ -30,7 +31,7 @@ run-env: $(BIN) $(DIFF_SO)
 run: run-env
 	$(BIN) $(ARGS) $(IMG)
 
-lldb: eun-env
+lldb: run-env
 	lldb $(BIN) -- $(ARGS) $(IMG)
 
 clean:

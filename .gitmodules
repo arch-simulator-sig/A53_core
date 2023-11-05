@@ -1,0 +1,4 @@
+[submodule "nemu"]
+	path = nemu
+	url = git@github.com:unlsycn/nemu.git
+	branch = coremark

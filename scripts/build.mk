@@ -3,7 +3,7 @@
 V_SRC_DIRS += $(V_SRC_HOME)
 CC_SRC_DIRS += $(CC_SRC_HOME)
 
-C_SHARED_DIR = $(WORK_DIR)/shared
+C_SHARED_DIR = $(NEMU_HOME)/shared
 C_SHARED_SRC_DIR = $(C_SHARED_DIR)/src
 
 V_INC_PATH += $(abspath $(V_SRC_HOME)/include)
@@ -33,7 +33,7 @@ DEP_OBJS = $(addprefix $(OBJ_DIR)/, $(notdir $(CSRCS:.cc=.o)))
 DEP_FLAG = -CFLAGS -MT'$(OBJ_DIR)/$$@'
 $(DEP_OBJS):
 	rm -f $@
-$(DEPS): $(shell sed -n -i 's/ [a-zA-Z.]*//g' $(DEPS))# remove all relative paths
+$(DEPS): $(shell sed -n -i 's/ [a-zA-Z.]*//g' $(DEPS) > /dev/null 2&>1)# remove all relative paths
 
 -include $(DEPS)
 -include $(OBJS:.o=.d)

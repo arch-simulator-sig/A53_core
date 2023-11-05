@@ -36,6 +36,4 @@ lldb: eun-env
 clean:
 	-rm -rf $(BUILD_DIR)/*
 
-include $(WORK_DIR)/scripts/vscode.mk
-
 .PHONY: run lldb clean run-env

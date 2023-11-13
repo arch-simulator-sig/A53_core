@@ -16,7 +16,7 @@ void init(int argc, char *argv[]);
 
 State state;
 
-static auto *dut = new VTop;
+static VTop *dut;
 VerilatedVcdC *wtrace;
 const std::unique_ptr<VerilatedContext> ctxp{new VerilatedContext};
 static uint64_t dump_cycle = 0;
@@ -45,7 +45,7 @@ void tick(int clk)
     if (dump_cycle <= CONFIG_WTRACE_CYCLE_LIMIT && inst_cnt >= CONFIG_WTRACE_START &&
         inst_cnt <= CONFIG_WTRACE_START + CONFIG_WTRACE_COUNT)
     {
-        wtrace->dump(sim_cycle);
+        wtrace->dump(dump_cycle);
         dump_cycle++;
     }
 #endif
@@ -125,7 +125,10 @@ int main(int argc, char *argv[])
 #ifdef CONFIG_WTRACE
     Verilated::traceEverOn(true);
     wtrace = new VerilatedVcdC;
-    dut->trace(wtrace, 5);
+#endif
+    dut = new VTop;
+#ifdef CONFIG_WTRACE
+    dut->trace(wtrace, 10);
     wtrace->open("build/wave.vcd");
 #endif
 

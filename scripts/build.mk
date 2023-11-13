@@ -43,7 +43,7 @@ SHARED_CXXFLAGS += $(shell llvm-config --cxxflags) -fPIE
 LDFLAGS += $(shell llvm-config --ldflags --libs)
 
 # rules for verilator
-VERILATOR_CFLAGS += -MMD --build --exe -cc -O3 --x-assign fast --x-initial fast --noassert --build-jobs 20
+VERILATOR_CFLAGS += -MMD --build --exe -cc -O3 --x-assign fast --x-initial fast --noassert --build-jobs 20 -Wno-lint
 VERILATOR_CFLAGS += --trace --trace-structs
 V_INCFLAGS = $(addprefix -I, $(V_INC_PATH))
 C_INCFLAGS = $(addprefix -I, $(C_INC_PATH))

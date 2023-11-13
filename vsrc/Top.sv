@@ -3,4 +3,9 @@ module Top (
         nRst
     );
     
+    SimTop top(
+        .clock(clk),
+        .reset(~nRst)
+    );
+
 endmodule

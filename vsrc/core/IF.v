@@ -1,0 +1,56 @@
+`include "defines.v"
+module IF(
+    input wire clk,
+    input wire rst_n,
+    input wire timer_int,
+
+    input wire flush,
+    input wire [5:0] stall,
+
+    input wire [63:0] new_pc,
+    input wire [64:0] br_bus,
+
+    output wire [31:0] csr_vec_h,
+
+    output wire inst_sram_en,
+    output wire [7:0] inst_sram_we,
+    output wire [63:0] inst_sram_addr,
+    output wire [63:0] inst_sram_wdata
+);
+    reg pc_valid;
+    reg [63:0] pc;
+    wire [63:0] pc_nxt;
+
+    wire br_e;
+    wire [63:0] br_addr;
+
+    assign {
+        br_e, br_addr
+    } = br_bus;
+
+    always @ (posedge clk) begin
+        if (!rst_n) begin
+            pc_valid <= 1'b0;
+            pc <= 64'h7fff_fffc;
+        end
+        else if (flush) begin
+            pc_valid <= 1'b1;
+            pc <= new_pc;
+        end
+        else if (!stall[0]) begin
+            pc_valid <= 1'b1;
+            pc <= pc_nxt;
+        end
+    end
+
+    assign pc_nxt = br_e ? br_addr : pc + 4'h4;
+
+    assign csr_vec_h = timer_int;
+
+    assign inst_sram_en     = flush | br_e ? 1'b0 : pc_valid ;
+    assign inst_sram_we     = 8'b0;
+    assign inst_sram_addr   = pc;
+    assign inst_sram_wdata  = 64'b0;
+
+
+endmodule

@@ -1,6 +1,7 @@
 `ifndef __DPI_C_SV__
 `define __DPI_C_SV__
 
+`include "config_generated.svh"
 `ifdef CONFIG_VERILATOR
 
 import "DPI-C" function void pmem_read(

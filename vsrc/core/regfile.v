@@ -78,6 +78,7 @@ import "DPI-C" function void set_pc_ptr(input xlen_t pc[]);
 
             xlen_t rPC;
 
+import "DPI-C" function void halt();
             always @(posedge clk)
             begin
                 rPC <= debug_wb_pc;

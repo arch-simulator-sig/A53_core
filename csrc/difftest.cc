@@ -70,10 +70,17 @@ bool Difftest::checkDiff(const char *name, xlen_t pc, xlen_t ref, xlen_t dut)
 
 void Difftest::step(xlen_t pc, xlen_t *gpr)
 {
-    if (sync_ref)
+    if (skip_ref)
     {
-        copyRegsToRef(pc, gpr);
-        sync_ref = false;
+        skip_tick--;
+        if (skip_tick == 0)
+            return;
+        if (skip_tick == -1)
+        {
+            Log("Syncing with REF at {:#x}", pc);
+            copyRegsToRef(pc, gpr);
+            skip_ref = false;
+        }
     }
 
     auto ref = getRegsFromRef();
@@ -86,12 +93,6 @@ void Difftest::step(xlen_t pc, xlen_t *gpr)
             return;
     }
 
-    if (skip_ref)
-    {
-        skip_ref = false;
-        sync_ref = true;
-        return;
-    }
     executeRef(1);
 }
 

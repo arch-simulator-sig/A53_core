@@ -409,6 +409,4 @@ module decoder_64i (
                     inst_csrrw | inst_csrrs | inst_csrrc | inst_csrrwi | inst_csrrsi | inst_csrrci;
     assign rf_waddr = rd;
 
-    assign oDbgHalt = inst_ebreak;
-
 endmodule

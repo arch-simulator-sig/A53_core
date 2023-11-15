@@ -15,14 +15,15 @@ class Difftest
     void init(char *ref_so_file, long img_size, int port);
 
     void step(xlen_t pc, xlen_t *gpr);
-    inline void skip()
+    inline void skip(int n)
     {
         skip_ref = true;
+        skip_tick = n;
     }
 
   private:
     bool skip_ref = false;
-    bool sync_ref = false;
+    int skip_tick = 0;
 
     void (*copyMemory)(xlen_t addr, void *buf, size_t n, bool direction) = nullptr;
     void (*copyRegs)(void *dut, bool direction) = nullptr;

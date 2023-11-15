@@ -134,27 +134,8 @@ module ID
         .csr_wdata_sel(csr_wdata_sel  ),
         .csr_vec_l    (csr_vec_l      ),
         .rf_we        (rf_we          ),
-        .rf_waddr     (rf_waddr       ),
-        .oDbgHalt     (dbgHalt        )
+        .rf_waddr     (rf_waddr       )
     );
-
-    wire dbgHalt;
-    reg  rDbgHalt;
-    reg  r2DbgHalt;
-
-import "DPI-C" function void halt();
-    always @(posedge clk)
-    begin
-        if(!stallreq_id)
-        begin
-            rDbgHalt <= dbgHalt;
-            r2DbgHalt <= rDbgHalt;
-        end
-        if (r2DbgHalt)
-        begin
-            halt();
-        end
-    end
 
     wire wb_rf_we;
     wire [4:0] wb_rf_waddr;

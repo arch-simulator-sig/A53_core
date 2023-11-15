@@ -70,7 +70,7 @@ Device *fetchMmio(xlen_t addr)
     {
         if (device->checkDevice(addr))
         {
-            Difftest::get().skip();
+            Difftest::get().skip(2);
             return device;
         }
     }
@@ -82,7 +82,7 @@ extern uint64_t inst_cnt;
 void readMmio(xlen_t addr, long long *rdata)
 {
     auto device = fetchMmio(addr);
-    Assert(device, "address {:#x} is out of bound", addr);
+    Assert(device, "address to READ {:#x} is out of bound", addr);
     IFDEF(CONFIG_DTRACE, if (inst_cnt >= CONFIG_TRACE_START && inst_cnt <= CONFIG_TRACE_END)
                              log("[dtrace] {{{}}} is READ at address {:#x}\n", device->getName(), addr));
     device->callback(device->getOffset(addr), 0);
@@ -92,7 +92,7 @@ void readMmio(xlen_t addr, long long *rdata)
 void writeMmio(xlen_t addr, xlen_t data, char mask)
 {
     auto device = fetchMmio(addr);
-    Assert(device, "address {:#x} is out of bound", addr);
+    Assert(device, "address to WRITE {:#x} is out of bound", addr);
     IFDEF(CONFIG_DTRACE, if (inst_cnt >= CONFIG_TRACE_START && inst_cnt <= CONFIG_TRACE_END) log(
                              "[dtrace] {{{}}} is WRITTEN at address {:#x} with mask {:#x}\n", device->getName(), addr, mask));
     device->setValue(device->getOffset(addr), data, mask);
